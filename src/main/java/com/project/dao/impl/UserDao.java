@@ -19,7 +19,7 @@ public class UserDao implements EntityDao<User> {
     private static final String PASSWORD = "password";
     private static final String SELECT_ALL_QUERY = "SELECT * FROM users";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM users WHERE id =?";
-    private static final String CREATE_QUERY = "INSERT INTO users (name, email, password, role) VALUES ( ?,?,?)";
+    private static final String CREATE_QUERY = "INSERT INTO users (name, email, password, role) VALUES ( ?,?,?,?)";
     private static final String UPDATE_QUERY = "UPDATE users SET (name, email, password, role) VALUES ( ?,?,?)";
 
     @Override
