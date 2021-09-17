@@ -15,10 +15,8 @@ public class ExhibitionDao implements EntityDao<Exhibition> {
     @Override
     public List<Exhibition> getAll() {
         List<Exhibition> result = new ArrayList<>();
-        try {
-            Connection connection = DataSourceFactory.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM exhibitions.exhibitions ");
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM exhibitions.exhibitions ");) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -44,9 +42,8 @@ public class ExhibitionDao implements EntityDao<Exhibition> {
     @Override
     public Exhibition getById(int inputId) {
         Exhibition exhibition = null;
-        try {
-            Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM exhibitions where id = ?");
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM exhibitions where id = ?");) {
             preparedStatement.setInt(1, inputId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -61,8 +58,50 @@ public class ExhibitionDao implements EntityDao<Exhibition> {
                 exhibition = new Exhibition(id, idTheme, startDate, endDate, startTime, endTime, cost, status);
             }
         } catch (SQLException throwables) {
-            LOG.error(throwables.getMessage(),throwables);
+            LOG.error(throwables.getMessage(), throwables);
         }
         return exhibition;
+    }
+
+    @Override
+    public int create(Exhibition entity) {
+        int result = 0;
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO exhibitions (id_theme, start_date, end_date, start_time, end_time, ticket_cost, status) VALUES (?, ?, ?, ?, ?, ?, ? )");) {
+            preparedStatement.setInt(1, entity.getIdTheme());
+            preparedStatement.setDate(2, entity.getStartDate());
+            preparedStatement.setDate(3, entity.getEndDate());
+            preparedStatement.setTime(4, entity.getStartTime());
+            preparedStatement.setTime(5, entity.getEndTime());
+            preparedStatement.setInt(6, entity.getCost());
+            preparedStatement.setString(7, entity.getStatus());
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
+
+    }
+
+    @Override
+    public int update(Exhibition entity) {
+
+        int result = 0;
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE exhibitions SET(id_theme, start_date, end_date, start_time, end_time, ticket_cost, status) VALUES (?, ?, ?, ?, ?, ?, ? )");) {
+
+            preparedStatement.setInt(1, entity.getIdTheme());
+            preparedStatement.setDate(2, entity.getStartDate());
+            preparedStatement.setDate(3, entity.getEndDate());
+            preparedStatement.setTime(4, entity.getStartTime());
+            preparedStatement.setTime(5, entity.getEndTime());
+            preparedStatement.setInt(6, entity.getCost());
+            preparedStatement.setString(7, entity.getStatus());
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
     }
 }

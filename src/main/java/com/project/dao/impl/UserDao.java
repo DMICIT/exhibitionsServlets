@@ -1,10 +1,8 @@
 package com.project.dao.impl;
-
 import com.project.dao.EntityDao;
 import com.project.entities.User;
 import com.project.persistance.DataSourceFactory;
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,9 +16,8 @@ public class UserDao implements EntityDao<User> {
     @Override
     public List<User> getAll() {
         List<User> result = new ArrayList<>();
-        try {
-            Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");
+        try ( Connection connection = DataSourceFactory.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");){
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -40,9 +37,8 @@ public class UserDao implements EntityDao<User> {
     @Override
     public User getById(int inputtId) {
         User userData = null;
-        try {
-            Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id =?");
+        try (Connection connection = DataSourceFactory.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id =?");){
             preparedStatement.setInt(1, inputtId);
             ResultSet resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
@@ -57,5 +53,41 @@ public class UserDao implements EntityDao<User> {
             LOG.error(e.getMessage(), e);
         }
         return userData;
+    }
+
+    @Override
+    public int create(User entity) {
+
+        int result = 0;
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (name, email, password, role) VALUES ( ?,?,?)")) {
+            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setString(2, entity.getEmail());
+            preparedStatement.setString(3, entity.getPassword());
+            preparedStatement.setString(4, entity.getRole());
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    @Override
+    public int update(User entity) {
+
+        int result = 0;
+        try (Connection connection = DataSourceFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET (name, email, password, role) VALUES ( ?,?,?)")) {
+            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setString(2, entity.getEmail());
+            preparedStatement.setString(3, entity.getPassword());
+            preparedStatement.setString(4, entity.getRole());
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
     }
 }
