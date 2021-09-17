@@ -12,19 +12,28 @@ import java.util.List;
 
 public class UserDao implements EntityDao<User> {
     private static final Logger LOG = Logger.getLogger(UserDao.class);
+    private static final String ROLE = "role";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM users";
+    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM users WHERE id =?";
+    private static final String CREATE_QUERY = "INSERT INTO users (name, email, password, role) VALUES ( ?,?,?)";
+    private static final String UPDATE_QUERY = "UPDATE users SET (name, email, password, role) VALUES ( ?,?,?)";
 
     @Override
     public List<User> getAll() {
         List<User> result = new ArrayList<>();
         try ( Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");){
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_QUERY);){
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
-                String role = resultSet.getString("role");
+                int id = resultSet.getInt(ID);
+                String name = resultSet.getString(NAME);
+                String email = resultSet.getString(EMAIL);
+                String password = resultSet.getString(PASSWORD);
+                String role = resultSet.getString(ROLE);
                 User userData = new User(id, name, email, password, role);
                 result.add(userData);
             }
@@ -38,15 +47,15 @@ public class UserDao implements EntityDao<User> {
     public User getById(int inputtId) {
         User userData = null;
         try (Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id =?");){
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY);){
             preparedStatement.setInt(1, inputtId);
             ResultSet resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
-                String role = resultSet.getString("role");
+                int id = resultSet.getInt(ID);
+                String name = resultSet.getString(NAME);
+                String email = resultSet.getString(EMAIL);
+                String password = resultSet.getString(PASSWORD);
+                String role = resultSet.getString(ROLE);
                 userData = new User(id, name, email, password, role);
             }
         } catch (SQLException e) {
@@ -60,7 +69,7 @@ public class UserDao implements EntityDao<User> {
 
         int result = 0;
         try (Connection connection = DataSourceFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (name, email, password, role) VALUES ( ?,?,?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY)) {
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getEmail());
             preparedStatement.setString(3, entity.getPassword());
@@ -78,7 +87,7 @@ public class UserDao implements EntityDao<User> {
 
         int result = 0;
         try (Connection connection = DataSourceFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET (name, email, password, role) VALUES ( ?,?,?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY)) {
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getEmail());
             preparedStatement.setString(3, entity.getPassword());
