@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `exhibitions`.`exhibitions` (
   `end_date` DATE NULL DEFAULT NULL,
   `start_time` TIME NULL DEFAULT NULL,
   `end_time` TIME NULL DEFAULT NULL,
-  `ticket_cost` INT(6) NULL DEFAULT NULL,
+  `entry_cost` INT(6) NULL DEFAULT NULL,
   `status` ENUM('in_progress', 'expected', 'passed') NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `exhibition_themes` (`id_theme` ASC) VISIBLE,
@@ -106,10 +106,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `exhibitions`.`tickets`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `exhibitions`.`tickets` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_exhibition` INT(11) NOT NULL,
   `id_user` INT(11) NOT NULL,
-  PRIMARY KEY (`id_exhibition`, `id_user`),
-  INDEX `id_user` (`id_user` ASC) VISIBLE,
+  `sold_date` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
   CONSTRAINT `sold_tickets`
     FOREIGN KEY (`id_exhibition`)
     REFERENCES `exhibitions`.`exhibitions` (`id`),

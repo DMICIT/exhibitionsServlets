@@ -12,16 +12,23 @@ import java.util.List;
 
 public class AreaDao implements EntityDao<Area> {
     private static final Logger LOG = Logger.getLogger(AreaDao.class);
+    private static final String ID = "id";
+    private static final String AREA = "area";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM areas";
+    private static final String SELECT_BY_ID_QUERY = "SELECT * FROM areas WHERE id = ?";
+    private static final String CREATE_QUERY = "INSERT INTO areas(area) VALUES (?)";
+    private static final String UPDATE_QUERY = "UPDATE areas SET(area) VALUES (?)";
+
 
     @Override
     public List<Area> getAll() {
         List<Area> result = new ArrayList<>();
         try (Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM areas");){
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_QUERY);){
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int area = resultSet.getInt("area");
+                int id = resultSet.getInt(ID);
+                int area = resultSet.getInt(AREA);
                 Area areaData = new Area(id, area);
                 result.add(areaData);
             }
@@ -36,12 +43,12 @@ public class AreaDao implements EntityDao<Area> {
         Area areaData = null;
 
         try (Connection connection = DataSourceFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM areas WHERE id = ?");){
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID_QUERY);){
             preparedStatement.setInt(1, inputId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int area = resultSet.getInt("area");
+                int id = resultSet.getInt(ID);
+                int area = resultSet.getInt(AREA);
                 areaData = new Area(id, area);
             }
         } catch (SQLException e) {
@@ -55,7 +62,7 @@ public class AreaDao implements EntityDao<Area> {
 
         int result = 0;
         try (Connection connection = DataSourceFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO areas(area) VALUES (?)");){
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY);){
             preparedStatement.setInt(1, entity.getArea());
             result = preparedStatement.executeUpdate();
 
@@ -69,7 +76,7 @@ public class AreaDao implements EntityDao<Area> {
     public int update(Area entity) {
         int result = 0;
         try (Connection connection = DataSourceFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE areas SET(area) VALUES (?)");) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY);) {
             preparedStatement.setInt(1, entity.getArea());
             result = preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
