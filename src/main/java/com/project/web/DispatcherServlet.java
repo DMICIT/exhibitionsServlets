@@ -1,7 +1,7 @@
 package com.project.web;
 
-import com.project.dao.impl.UserDao;
-import com.project.entities.User;
+import com.project.services.UserService;
+import com.project.services.ValidatorService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -16,21 +16,23 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        req.getRequestDispatcher("registration.jsp").forward(req,resp);
+        req.getRequestDispatcher("registration.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String name = req.getParameter("name");
         String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        LOG.info("name: " + name + " email: "+ email + " password: "+ password);
-        User user = new User(name,email,password,"user");
-        UserDao userDao = new UserDao();
-        userDao.create(user);
 
-        req.getRequestDispatcher("registration.jsp").forward(req,resp);
+        if (ValidatorService.validate(req)) {
 
+            if (!UserService.isUserExist(email)) {
+                UserService.createUser(req);
+            } else {
+                LOG.info("Already exist user with this email: " + email);
+                req.setAttribute("errorMessage", "User already exist");
+            }
+        }
+        req.getRequestDispatcher("registration.jsp").forward(req, resp);
     }
 }
