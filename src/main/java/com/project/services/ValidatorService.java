@@ -1,24 +1,20 @@
 package com.project.services;
 
+import com.project.web.forms.RegistrationForm;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class ValidatorService {
-    public static boolean validate(HttpServletRequest request) {
+    public static boolean validate(RegistrationForm form) {
 
         boolean result = true;
 
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirm_password");
 
-        if (email.length() < 3) {
+        if (form.getEmail().length() < 3) {
             result = false;
-            request.setAttribute("errorMessage", "False email");
         }
-        if (!password.equals(confirmPassword)) {
+        if (!form.getPassword().equals(form.getConfirmPassword())) {
             result = false;
-            request.setAttribute("errorMessage", "Passwords are not same");
         }
         return result;
     }

@@ -1,7 +1,9 @@
 package com.project.web;
 
+import com.project.factory.CommandFactory;
 import com.project.services.UserService;
 import com.project.services.ValidatorService;
+import com.project.web.commands.Command;
 import com.project.web.commands.LoginCommand;
 import com.project.web.commands.RegistrationCommand;
 import org.apache.log4j.Logger;
@@ -29,15 +31,18 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String requestUri = req.getRequestURI();
+        String path = getPath(req);
+
+        Command command = CommandFactory.getCommand(path);
+        String page = command.execute(req,resp);
+
+        req.getRequestDispatcher("/WEB-INF/pages/" + page).forward(req, resp);
+    }
+
+    private String getPath(HttpServletRequest request){
+        String requestUri = request.getRequestURI();
         int lastSymbol = requestUri.lastIndexOf('/');
-        String path = requestUri.substring(lastSymbol + 1);
-        if (path.equals("registration")) {
-            String registrationPage = new RegistrationCommand().execute(req, resp);
-            req.getRequestDispatcher("/WEB-INF/pages/" + registrationPage).forward(req, resp);
-        }else if (path.equals("login")){
-            String loginPage = new LoginCommand().execute(req,resp);
-            req.getRequestDispatcher("/WEB-INF/pages/" + loginPage).forward(req,resp);
-        }
+        return requestUri.substring(lastSymbol + 1);
+
     }
 }

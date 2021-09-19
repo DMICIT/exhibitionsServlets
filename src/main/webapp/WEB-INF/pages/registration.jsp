@@ -12,6 +12,7 @@
     <title>Registration</title>
 </head>
 <body>
+<a href >Home</a>
   <h2>Registration form</h2>
     </br>
     </br>

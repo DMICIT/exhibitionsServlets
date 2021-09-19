@@ -11,6 +11,7 @@
     <title>Login</title>
 </head>
 <body>
+<a href = "/">Home</a>
 <h2>Login form</h2>
 </br>
 </br>

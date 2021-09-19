@@ -2,6 +2,7 @@ package com.project.services;
 
 import com.project.dao.impl.UserDaoImpl;
 import com.project.entities.User;
+import com.project.web.forms.RegistrationForm;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,16 +18,11 @@ public class UserService {
         return false;
     }
 
-    public static void createUser(HttpServletRequest request) {
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+    public static void createUser(RegistrationForm form) {
 
         UserDaoImpl instance = UserDaoImpl.getInstance();
-        User user = new User(name, email, password, "user");
+        User user = new User(form.getName(), form.getEmail(), form.getPassword(), "user");
         instance.create(user);
-
-        request.setAttribute("errorMessage", "User created");
 
     }
 }
