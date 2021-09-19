@@ -2,6 +2,8 @@ package com.project.web;
 
 import com.project.services.UserService;
 import com.project.services.ValidatorService;
+import com.project.web.commands.LoginCommand;
+import com.project.web.commands.RegistrationCommand;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -16,23 +18,26 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        req.getRequestDispatcher("registration.jsp").forward(req, resp);
+        processRequest(req, resp);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String email = req.getParameter("email");
+        processRequest(req, resp);
+    }
 
-        if (ValidatorService.validate(req)) {
-
-            if (!UserService.isUserExist(email)) {
-                UserService.createUser(req);
-            } else {
-                LOG.info("Already exist user with this email: " + email);
-                req.setAttribute("errorMessage", "User already exist");
-            }
+    private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String requestUri = req.getRequestURI();
+        int lastSymbol = requestUri.lastIndexOf('/');
+        String path = requestUri.substring(lastSymbol + 1);
+        if (path.equals("registration")) {
+            String registrationPage = new RegistrationCommand().execute(req, resp);
+            req.getRequestDispatcher("/WEB-INF/pages/" + registrationPage).forward(req, resp);
+        }else if (path.equals("login")){
+            String loginPage = new LoginCommand().execute(req,resp);
+            req.getRequestDispatcher("/WEB-INF/pages/" + loginPage).forward(req,resp);
         }
-        req.getRequestDispatcher("registration.jsp").forward(req, resp);
     }
 }
