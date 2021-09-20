@@ -24,6 +24,15 @@ public class ExhibitionDao implements EntityDao<Exhibition> {
     private static final String CREATE_QUERY = "INSERT INTO exhibitions (id_theme, start_date, end_date, start_time, end_time, entry_cost, status) VALUES (?, ?, ?, ?, ?, ?, ? )";
     private static final String UPDATE_QUERY = "UPDATE exhibitions SET(id_theme, start_date, end_date, start_time, end_time, entry_cost, status) VALUES (?, ?, ?, ?, ?, ?, ? )";
 
+    private static ExhibitionDao instance;
+    private ExhibitionDao (){}
+
+    public static synchronized ExhibitionDao getInstance(){
+        if (instance == null){
+            instance = new ExhibitionDao();
+        }
+        return instance;
+    }
     @Override
     public List<Exhibition> getAll() {
         List<Exhibition> result = new ArrayList<>();
