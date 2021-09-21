@@ -20,6 +20,16 @@ public class TicketDao implements EntityDao<Ticket> {
     public static final String CREATE_QUERY = "INSERT INTO tickets(id_exhibition, id_user, sold_date) VALUES (?,?,?)";
     public static final String UPDATE_QUERY = "UPDATE INTO tickets SET(id_exhibition, id_user, sold_date) VALUES (?,?,?)";
 
+    private static TicketDao instance;
+    private TicketDao() {}
+
+    public static synchronized TicketDao getTicketDao() {
+        if (instance == null) {
+            instance = new TicketDao();
+        }
+        return instance;
+    }
+
     @Override
     public List<Ticket> getAll() {
         List<Ticket> ticket = new ArrayList<>();
@@ -32,7 +42,7 @@ public class TicketDao implements EntityDao<Ticket> {
                 int idExhibition = resultSet.getInt(ID_EXHIBITION);
                 int idUser = resultSet.getInt(ID_USER);
                 Timestamp soldDate = resultSet.getTimestamp(SOLD_DATE);
-                Ticket ticketData = new Ticket(id,idExhibition, idUser, soldDate);
+                Ticket ticketData = new Ticket(id, idExhibition, idUser, soldDate);
                 ticket.add(ticketData);
             }
         } catch (SQLException e) {

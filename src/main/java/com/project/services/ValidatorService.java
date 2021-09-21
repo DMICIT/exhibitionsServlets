@@ -3,7 +3,6 @@ package com.project.services;
 import com.project.web.forms.LoginForm;
 import com.project.web.forms.RegistrationForm;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
