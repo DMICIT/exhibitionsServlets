@@ -16,6 +16,14 @@ public class Ticket {
         this.soldDate = soldDate;
     }
 
+    public Ticket( int idExhibition, int idUser, Timestamp soldDate) {
+
+        this.idExhibition = idExhibition;
+        this.idUser = idUser;
+        this.soldDate = soldDate;
+    }
+
+
     public int getIdExhibition() {
         return idExhibition;
     }
