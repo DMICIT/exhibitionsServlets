@@ -23,6 +23,7 @@ public class RegistrationCommand extends AbstractCommand {
         if (ValidatorService.validate(form)) {
             if (!UserService.isUserExist(form.getEmail())) {
                 UserService.createUser(form);
+                return "redirect:login";
             } else {
                 LOG.info("Already exist user with this email: " + form.getEmail());
                 request.setAttribute("errorMessage", "User already exist");
