@@ -39,7 +39,7 @@
     <c:forEach items = "${exhibitions}" var="exhibition">
         <tr>
             <td>${exhibition.id}</td>
-            <td>${exhibition.idTheme}</td>
+            <td>${exhibition.theme.name}</td>
             <td>${exhibition.startDate}</td>
             <td>${exhibition.endDate}</td>
             <td>${exhibition.startTime}</td>

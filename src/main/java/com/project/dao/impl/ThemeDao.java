@@ -19,6 +19,15 @@ public class ThemeDao implements EntityDao<Theme> {
     private static final String CREATE_QUERY = "INSERT INTO themes (theme) VALUES (?)";
     private static final String UPDATE_QUERY = "UPDATE themes SET(theme) VALUES (?)";
 
+    private static ThemeDao instance;
+    private ThemeDao (){}
+    public static synchronized ThemeDao getInstance(){
+        if (instance == null) {
+            instance = new ThemeDao();
+        }
+        return instance;
+    }
+
     @Override
     public List<Theme> getAll() {
         List<Theme> result = new ArrayList<>();
