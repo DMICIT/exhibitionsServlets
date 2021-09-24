@@ -16,6 +16,7 @@ public class CommandFactory {
         commandMap.put("exhibitions", new ExhibitionCommand());
         commandMap.put("exhibition", new SingleExhibitionCommand());
         commandMap.put("tickets", new TicketsCommand());
+        commandMap.put("logout", new LogoutCommand());
     }
 
     private CommandFactory() {

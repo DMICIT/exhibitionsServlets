@@ -23,7 +23,7 @@
                <a class="btn btn-primary btn-lg" href="exhibitions">Exhibitions</a>
            </div>
        </div>
-       Hello user : ${user}
+       Hello user : ${usersEmail}
    </div>
 
    <c:import url="components/footer.jsp"/>
