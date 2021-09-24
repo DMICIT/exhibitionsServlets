@@ -23,6 +23,13 @@ public class Ticket {
         this.soldDate = soldDate;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getIdExhibition() {
         return idExhibition;

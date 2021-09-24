@@ -37,7 +37,7 @@ public class LoginCommand extends AbstractCommand {
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute("user", form.getEmail());
+        session.setAttribute("usersEmail", form.getEmail());
 
         return "index.jsp";
     }
