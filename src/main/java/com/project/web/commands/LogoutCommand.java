@@ -13,6 +13,7 @@ public class LogoutCommand implements Command{
         if (usersEmail != null){
             session.invalidate();
         }
-        return "index.jsp";
+
+        return "redirect:";
     }
 }
